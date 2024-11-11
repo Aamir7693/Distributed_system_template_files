@@ -1,0 +1,144 @@
+1. test each bank operation alone
+    install necessary package:
+    sudo apt update
+    sudo apt install python3-pip
+    pip install tabulate
+
+1.1 open first terminal and start the server:
+    python3 server.py
+
+1.2 open a second terminal for running client requests
+    python3 client.py [user] [command] [account_number] [amount]
+
+    *1.2.1 create_account
+    Create an account for Tim with account number 1078 and an initial deposit of $500.
+    python3 client.py Tim create_account 1078 500
+
+    Create an account for Zion with account number 1099 without an initial deposit.
+    python3 client.py Zion create_account 1099
+
+    (Error) Attempt to create a second account for an existing user, Alice.
+    python3 client.py Alice create_account 1078 500
+
+    (Error) Attempt to create an account for a new user, Joe, but use an existing account number.
+    python3 client.py Joe create_account 1001 500
+
+
+    *1.2.2 show_bank
+    Only Audit can view bank information.
+    python3 client.py Audit show_bank
+
+    (Error) Another user tries to view bank information.
+    python3 cl.py Lucas show_bank
+
+
+    *1.2.3 show_accountholders
+    The account initiate cardholder queries account holders.
+    python3 client.py Alice show_accountholders 1001
+
+    A non-initiate-cardholder queries account holders.
+    python3 client.py Alice show_accountholders 1022
+
+
+    *1.2.4 deposit
+    Make a valid deposit.
+    python3 client.py Alice deposit 1001 500
+
+    (Error) Attempt to deposit a negative amount.
+    python3 client.py Alice deposit 1001 -1000
+
+    (Error) Incorrect account number.
+    python3 client.py Alice deposit 2001 1000
+
+
+    *1.2.5 withdraw
+    Make a valid withdrawal.
+    python3 client.py Alice withdraw 1001 600
+
+    (Error) Attempt to withdraw a negative amount.
+    python3 client.py Alice withdraw 1001 -600
+
+    (Error) Incorrect account number.
+    python3 client.py Alice withdraw 1200 600
+
+    (Error) The withdrawal user is not an account holder.
+    python3 client.py Gary withdraw 1001 600
+
+
+    *1.2.6 transfer_to
+    Make a valid transfer.
+    python3 client.py William transfer_to 1013 200
+
+    (Error) Attempt to transfer a negative amount.
+    python3 client.py William transfer_to 1013 -200
+
+    (Error) The user performing the action is not the originator of any account and thus has no funds to transfer.
+    python3 client.py Liam transfer_to 1013 200
+
+    (Error) The target account for the transfer does not exist.
+    python3 client.py William transfer_to 1201 200
+
+    (Error) The transfer initiator has insufficient funds.
+    python3 client.py William transfer_to 1013 20000
+
+
+    *1.2.7 pay_loan_check
+    Make a valid loan repayment.
+    python3 client.py Alice pay_loan_check 1002 100
+
+    (Error) Attempt to make a loan repayment with a negative amount.
+    python3 client.py Alice pay_loan_check 1002 -100
+
+    (Error) The repayment account is not a loan account.
+    python3 client.py Alice pay_loan_check 1001 100
+
+    (Error) The current user is not an account holder.
+    python3 client.py William pay_loan_check 1002 100
+
+    (Error) Incorrect account number.
+    python3 client.py Alice pay_loan_check 9011 100
+
+
+    *1.2.8 pay_loan_transfer_to
+    Transfer funds to pay a loan.
+    python3 client.py Alice pay_loan_transfer_to 1002 100
+
+    (Error) Incorrect account number.
+    python3 client.py Alice pay_loan_transfer_to 2002 100
+
+    (Error) Negative amount for loan repayment transfer.
+    python3 client.py Alice pay_loan_transfer_to 1002 -100
+
+    (Error) The user performing the action has no checking account.
+    python3 client.py Bobby pay_loan_transfer_to 1002 100
+
+    (Error) The user's checking account balance is insufficient.
+    python3 client.py Zion pay_loan_transfer_to 1002 100
+
+    (Error) The user is not an account holder of the loan account.
+    python3 client.py Dave pay_loan_transfer_to 1002 100
+
+
+    *1.2.9 show_history
+    Display the transaction history.
+    python3 client.py Alice show_history 1001
+
+    (Error) Incorrect account number.
+    python3 client.py Alice show_history 1301
+
+    (Error) The user is not an account holder for this account.
+    python3 client.py Alice show_history 1009
+
+
+
+2. use bash script to concurrently process several clients
+
+2.1 grant permissions
+    chmod +x short_script.sh
+    chmod +x run_bank.sh
+
+2.2 run the short script
+    ./short_script.sh (make sure the server is not running. The script will start the server.)
+
+2.3 run bash script
+    ./run_bank.sh (make sure the server is not running. The script will start the server.)
