@@ -267,11 +267,16 @@ class Bank:
         pass  # remove this "pass" when you do your project
 
     def show_history(self, data_dict):
-        # Check if the user is one of the account holders
+     # check whether the current user is one of the account holders
 
-        # return account history
+     # check whether this account has any operation history
 
-        pass  # remove this "pass" when you do your project
+     # if all yes, return account history.
+
+     # The format of account history is ([user], [command], [amount])
+     # for example: ('Alice', 'deposit', 500) or (Alice, deposit, 500) both ok.
+
+     pass #remove this "pass" when you do your project
     
 def handle_client(client_socket, bank):
     while True:
